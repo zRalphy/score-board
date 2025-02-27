@@ -5,12 +5,14 @@ public class Match {
     private String awayTeam;
     private int homeScore;
     private int awayScore;
+    private long startTime;
 
     public Match(String homeTeam, String awayTeam) {
         this.homeTeam = homeTeam;
         this.awayTeam = awayTeam;
         this.homeScore = 0;
         this.awayScore = 0;
+        this.startTime = System.currentTimeMillis();
     }
 
     public void updateScore(int homeScore, int awayScore) {
@@ -32,5 +34,9 @@ public class Match {
 
     public int getAwayScore() {
         return awayScore;
+    }
+
+    public long getStartTime() {
+        return startTime;
     }
 }

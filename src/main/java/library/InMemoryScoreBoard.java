@@ -34,8 +34,9 @@ public class InMemoryScoreBoard implements ScoreBoard {
 
     @Override
     public List<String> getMatchSummary() {
-        matches.sort(Comparator.comparingInt(Match::getTotalScore).reversed()
-                .thenComparingLong(m -> System.currentTimeMillis() - m.getHomeScore())); // Using currentTimeMillis for sorting
+        matches.sort(Comparator
+                .comparingInt(Match::getTotalScore).reversed() // Sort by total score descending
+                .thenComparingLong(Match::getStartTime)); // Sort by start time (most recent first)
 
         List<String> summaries = new ArrayList<>();
         for (Match match : matches) {
