@@ -11,7 +11,8 @@ class ScoreBoardTest {
 
     @BeforeEach
     void setUp() {
-        scoreBoard = new InMemoryScoreBoard();  // Using the InMemory implementation
+        // Using the InMemory implementation
+        scoreBoard = new InMemoryScoreBoard();
     }
 
     @Test
@@ -91,7 +92,6 @@ class ScoreBoardTest {
 
     @Test
     void testGetMatchSummaryWithSameTotalScore() {
-        // Given: Two matches are started
         scoreBoard.startMatch("Mexico", "Canada");
         scoreBoard.startMatch("Spain", "Brazil");
 
@@ -106,7 +106,6 @@ class ScoreBoardTest {
         assertTrue(summary.get(1).contains("Mexico 3 - 1 Canada"));
     }
 
-
     @Test
     void testFinishMatchWithInvalidIndex() {
         // Given: One match is started
@@ -114,9 +113,23 @@ class ScoreBoardTest {
         assertEquals(1, scoreBoard.getMatchSummary().size(), "There should be one match.");
 
         // When: An invalid match index is used
-        scoreBoard.finishMatch(100);  // Invalid index (non-existing match)
+        scoreBoard.finishMatch(100);
 
         // Then: The match should remain in the score board
+        assertEquals(1, scoreBoard.getMatchSummary().size(), "The match should still be in progress.");
+        assertTrue(scoreBoard.getMatchSummary().get(0).contains("Mexico 0 - 0 Canada"));
+    }
+
+    @Test
+    void testFinishMatchWithNegativeIndex() {
+        // Given: One match is started
+        scoreBoard.startMatch("Mexico", "Canada");
+        assertEquals(1, scoreBoard.getMatchSummary().size(), "There should be one match.");
+
+        // When: A negative index is used to finish a match
+        scoreBoard.finishMatch(-1);
+
+        // Then: The match should remain in the scoreboard, as the index is invalid
         assertEquals(1, scoreBoard.getMatchSummary().size(), "The match should still be in progress.");
         assertTrue(scoreBoard.getMatchSummary().get(0).contains("Mexico 0 - 0 Canada"));
     }
@@ -128,7 +141,7 @@ class ScoreBoardTest {
         assertTrue(scoreBoard.getMatchSummary().get(0).contains("Mexico 0 - 0 Canada"));
 
         // When: An invalid match index is used for updating score
-        scoreBoard.updateScore(100, 3, 1);  // Invalid index (non-existing match)
+        scoreBoard.updateScore(100, 3, 1);
 
         // Then: The match score should remain unchanged
         assertTrue(scoreBoard.getMatchSummary().get(0).contains("Mexico 0 - 0 Canada"));

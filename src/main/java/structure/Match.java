@@ -1,18 +1,20 @@
 package structure;
 
+import java.time.OffsetDateTime;
+
 public class Match {
-    private String homeTeam;
-    private String awayTeam;
+    private final String homeTeam;
+    private final String awayTeam;
     private int homeScore;
     private int awayScore;
-    private long startTime;
+    private final OffsetDateTime startTime;
 
     public Match(String homeTeam, String awayTeam) {
         this.homeTeam = homeTeam;
         this.awayTeam = awayTeam;
         this.homeScore = 0;
         this.awayScore = 0;
-        this.startTime = System.currentTimeMillis();
+        this.startTime = OffsetDateTime.now();
     }
 
     public void updateScore(int homeScore, int awayScore) {
@@ -28,15 +30,7 @@ public class Match {
         return homeTeam + " " + homeScore + " - " + awayScore + " " + awayTeam;
     }
 
-    public int getHomeScore() {
-        return homeScore;
-    }
-
-    public int getAwayScore() {
-        return awayScore;
-    }
-
-    public long getStartTime() {
+    public OffsetDateTime getStartTime() {
         return startTime;
     }
 }

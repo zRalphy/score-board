@@ -2,15 +2,16 @@ package library;
 
 import structure.Match;
 
-import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class InMemoryScoreBoard implements ScoreBoard {
-    private List<Match> matches;
+    private final List<Match> matches;
 
     public InMemoryScoreBoard() {
-        this.matches = new ArrayList<>();
+        this.matches = new LinkedList<>();
     }
 
     @Override
@@ -34,14 +35,10 @@ public class InMemoryScoreBoard implements ScoreBoard {
 
     @Override
     public List<String> getMatchSummary() {
-        matches.sort(Comparator
-                .comparingInt(Match::getTotalScore).reversed() // Sort by total score descending
-                .thenComparingLong(Match::getStartTime)); // Sort by start time (most recent first)
-
-        List<String> summaries = new ArrayList<>();
-        for (Match match : matches) {
-            summaries.add(match.getMatchSummary());
-        }
-        return summaries;
+        return matches.stream()  // Create a stream from the matches list
+                .sorted(Comparator.comparingInt(Match::getTotalScore).reversed()  // Sort by total score descending
+                        .thenComparing(Match::getStartTime))  // Sort by start time (most recent first)
+                .map(Match::getMatchSummary)  // Map each match to its summary
+                .collect(Collectors.toList());
     }
 }
