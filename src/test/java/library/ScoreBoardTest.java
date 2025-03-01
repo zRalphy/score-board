@@ -13,6 +13,7 @@ class ScoreBoardTest {
     void setUp() {
         // Using the InMemory implementation
         scoreBoard = new InMemoryScoreBoard();
+        scoreBoard.getMatchSummary().clear();
     }
 
     @Test
@@ -69,19 +70,19 @@ class ScoreBoardTest {
         // When: The scores are updated
         scoreBoard.updateScore(0, 3, 1);  // Mexico 3 - 1 Canada
         scoreBoard.updateScore(1, 10, 2); // Spain 10 - 2 Brazil
-        scoreBoard.updateScore(2, 2, 2);  // Germany 2 - 2 France
+        scoreBoard.updateScore(2, 0, 2);  // Germany 0 - 2 France
 
         // Then: The match summary should be sorted by total score and recency
         var summary = scoreBoard.getMatchSummary();
 
-        // First match should be Spain vs Brazil (highest total score: 12)
+        // First match should be Spain vs Brazil (total score: 12)
         assertTrue(summary.get(0).contains("Spain 10 - 2 Brazil"));
 
         // Second match should be Mexico vs Canada (total score: 4)
         assertTrue(summary.get(1).contains("Mexico 3 - 1 Canada"));
 
-        // Third match should be Germany vs France (total score: 4, but started last)
-        assertTrue(summary.get(2).contains("Germany 2 - 2 France"));
+        // Third match should be Germany vs France (total score: 2)
+        assertTrue(summary.get(2).contains("Germany 0 - 2 France"));
     }
 
     @Test
@@ -93,6 +94,8 @@ class ScoreBoardTest {
     @Test
     void testGetMatchSummaryWithSameTotalScore() {
         scoreBoard.startMatch("Mexico", "Canada");
+        //To avoid flaky tests related to the match startTime (in some cases being close to the same for two games)
+        sleep();
         scoreBoard.startMatch("Spain", "Brazil");
 
         // When: Scores are updated with the same total score
@@ -145,5 +148,13 @@ class ScoreBoardTest {
 
         // Then: The match score should remain unchanged
         assertTrue(scoreBoard.getMatchSummary().get(0).contains("Mexico 0 - 0 Canada"));
+    }
+
+    private void sleep() {
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }

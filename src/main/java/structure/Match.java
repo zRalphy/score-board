@@ -27,7 +27,7 @@ public class Match {
     }
 
     public String getMatchSummary() {
-        return homeTeam + " " + homeScore + " - " + awayScore + " " + awayTeam;
+        return String.format("%s %d - %d %s", homeTeam, homeScore, awayScore, awayTeam);
     }
 
     public OffsetDateTime getStartTime() {
